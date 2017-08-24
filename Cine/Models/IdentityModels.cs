@@ -29,5 +29,7 @@ namespace Cine.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Cine.Pelicula> Peliculas { get; set; }
     }
 }
