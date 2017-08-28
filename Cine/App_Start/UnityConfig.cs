@@ -20,6 +20,8 @@ namespace Cine
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
             container.RegisterType<IEntradasRepository, EntradasRepository>();
             container.RegisterType<IEntradasService, EntradasService>();
+            container.RegisterType<IPeliculasRepository, PeliculasRepository>();
+            container.RegisterType<IPeliculasService, PeliculasService>();
         }
     }
 }

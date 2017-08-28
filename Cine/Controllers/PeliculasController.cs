@@ -6,56 +6,60 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Cine.Models;
 using System.Web.Http.Cors;
+using Cine.Service;
 
 namespace Cine.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PeliculasController : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IPeliculasService PeliculasService;
+        public PeliculasController(IPeliculasService _PeliculasService)
+        {
+            this.PeliculasService = _PeliculasService;
+        }
 
         // GET: api/Peliculas
         public IQueryable<Pelicula> GetPeliculas()
         {
-            return db.Peliculas;
+            return this.PeliculasService.ReadPeliculas();
         }
 
         // GET: api/Peliculas/5
         [ResponseType(typeof(Pelicula))]
         public IHttpActionResult GetPelicula(long id)
         {
-            Pelicula pelicula = db.Peliculas.Find(id);
-            if (pelicula == null)
+            Pelicula Pelicula = this.PeliculasService.GetPelicula(id);
+            if (Pelicula == null)
             {
                 return NotFound();
             }
 
-            return Ok(pelicula);
+            return Ok(Pelicula);
         }
 
         // PUT: api/Peliculas/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutPelicula(long id, Pelicula pelicula)
+        public IHttpActionResult PutPelicula(long id, Pelicula Pelicula)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != pelicula.Id)
+            if (id != Pelicula.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(pelicula).State = EntityState.Modified;
 
             try
             {
-                db.SaveChanges();
+                this.PeliculasService.PutPelicula(Pelicula);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PeliculaExists(id))
+                if (this.PeliculasService.GetPelicula(id) == null)
                 {
                     return NotFound();
                 }
@@ -70,47 +74,33 @@ namespace Cine.Controllers
 
         // POST: api/Peliculas
         [ResponseType(typeof(Pelicula))]
-        public IHttpActionResult PostPelicula(Pelicula pelicula)
+        public IHttpActionResult PostPelicula(Pelicula Pelicula)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Peliculas.Add(pelicula);
-            db.SaveChanges();
+            Pelicula = this.PeliculasService.Create(Pelicula);
 
-            return CreatedAtRoute("DefaultApi", new { id = pelicula.Id }, pelicula);
+            return CreatedAtRoute("DefaultApi", new { id = Pelicula.Id }, Pelicula);
         }
 
         // DELETE: api/Peliculas/5
         [ResponseType(typeof(Pelicula))]
         public IHttpActionResult DeletePelicula(long id)
         {
-            Pelicula pelicula = db.Peliculas.Find(id);
-            if (pelicula == null)
+            try
+            {
+                return Ok(this.PeliculasService.Delete(id));
+            }
+            catch (NoEncontradoException e)
             {
                 return NotFound();
             }
 
-            db.Peliculas.Remove(pelicula);
-            db.SaveChanges();
 
-            return Ok(pelicula);
-        }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool PeliculaExists(long id)
-        {
-            return db.Peliculas.Count(e => e.Id == id) > 0;
         }
     }
 }

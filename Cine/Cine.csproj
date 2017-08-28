@@ -278,9 +278,13 @@
     <Compile Include="Pelicula.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Repository\PeliculasRepository .cs" />
+    <Compile Include="Repository\IPeliculasRepository.cs" />
     <Compile Include="Repository\IEntradasRepository.cs" />
     <Compile Include="Repository\EntradasRepository.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Service\PeliculasService.cs" />
+    <Compile Include="Service\IPeliculasService.cs" />
     <Compile Include="Service\IEntradasService.cs" />
     <Compile Include="Service\EntradasService.cs" />
     <Compile Include="Startup.cs" />
