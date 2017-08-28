@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using System;
 
 namespace Cine.Models
 {
@@ -20,6 +21,8 @@ namespace Cine.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        [ThreadStatic]
+        public static ApplicationDbContext applicationDbContext;
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -31,5 +34,7 @@ namespace Cine.Models
         }
 
         public System.Data.Entity.DbSet<Cine.Pelicula> Peliculas { get; set; }
+
+        public System.Data.Entity.DbSet<Cine.Entrada> Entradas { get; set; }
     }
 }

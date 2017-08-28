@@ -11,6 +11,6 @@ namespace Cine
         public String Titulo { get; set; }
         public String Director { get; set; }
         public int Anno { get; set; }
-        public String Duracion { get; set; }
+        public int Duracion { get; set; }
     }
 }
